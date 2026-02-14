@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top Level Menu -->
+    <menuitem
+        id="menu_sunnypay_root"
+        name="SunnyPay"
+        web_icon="sunnypay_connector,static/description/icon.png"
+        sequence="50"
+    />
+
+    <!-- Sub-Menus -->
+    <menuitem
+        id="menu_sunnypay_dashboard"
+        name="Dashboard"
+        parent="menu_sunnypay_root"
+        action="action_sunnypay_dashboard"
+        sequence="1"
+    />
+
+    <menuitem
+        id="menu_sunnypay_transactions"
+        name="Transactions"
+        parent="menu_sunnypay_root"
+        action="action_sunnypay_transaction_list"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_sunnypay_merchants"
+        name="Merchants"
+        parent="menu_sunnypay_root"
+        action="action_sunnypay_merchant_list"
+        sequence="20"
+    />
+
+    <menuitem
+        id="menu_sunnypay_invoices"
+        name="Invoices"
+        parent="menu_sunnypay_root"
+        action="action_sunnypay_invoice_list"
+        sequence="30"
+    />
+
+    <menuitem
+        id="menu_sunnypay_customers"
+        name="Customers"
+        parent="menu_sunnypay_root"
+        action="action_sunnypay_customer_list"
+        sequence="40"
+    />
+
+    <!-- Configuration Menu -->
+    <menuitem
+        id="menu_sunnypay_config"
+        name="Configuration"
+        parent="menu_sunnypay_root"
+        sequence="90"
+    />
+
+    <menuitem
+        id="menu_sunnypay_settings"
+        name="Settings"
+        parent="menu_sunnypay_config"
+        action="action_sunnypay_config_settings"
+        sequence="1"
+    />
+</odoo>

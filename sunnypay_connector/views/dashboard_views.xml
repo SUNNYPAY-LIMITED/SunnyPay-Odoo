@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========== Dashboard Action ========== -->
+    <record id="action_sunnypay_dashboard" model="ir.actions.client">
+        <field name="name">SunnyPay Dashboard</field>
+        <field name="tag">sunnypay_dashboard</field>
+    </record>
+
+    <!-- Dashboard Template (QWeb) -->
+    <template id="sunnypay_dashboard_template" name="SunnyPay Dashboard">
+        <div class="container-fluid o_sunnypay_dashboard">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0">
+                            <i class="fa fa-bolt text-warning me-2"/>SunnyPay Dashboard
+                        </h2>
+                        <div>
+                            <button class="btn btn-primary me-2" id="btn_sync_all">
+                                <i class="fa fa-refresh me-1"/>Sync Now
+                            </button>
+                            <a class="btn btn-outline-secondary"
+                               t-attf-href="/web#action=#{action_sunnypay_config_settings}"
+                               role="button">
+                                <i class="fa fa-cog me-1"/>Settings
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Cards Row -->
+            <div class="row mb-4">
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted mb-1 small">Total Transactions</p>
+                                    <h3 class="mb-0 fw-bold" id="kpi_total_txn">0</h3>
+                                </div>
+                                <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                                    <i class="fa fa-exchange fa-lg text-primary"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted mb-1 small">Revenue</p>
+                                    <h3 class="mb-0 fw-bold" id="kpi_revenue">$0</h3>
+                                </div>
+                                <div class="rounded-circle bg-success bg-opacity-10 p-3">
+                                    <i class="fa fa-money fa-lg text-success"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted mb-1 small">Active Merchants</p>
+                                    <h3 class="mb-0 fw-bold" id="kpi_merchants">0</h3>
+                                </div>
+                                <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+                                    <i class="fa fa-building fa-lg text-warning"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted mb-1 small">Customers</p>
+                                    <h3 class="mb-0 fw-bold" id="kpi_customers">0</h3>
+                                </div>
+                                <div class="rounded-circle bg-info bg-opacity-10 p-3">
+                                    <i class="fa fa-users fa-lg text-info"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Links Row -->
+            <div class="row mb-4">
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <a class="card border-0 shadow-sm text-decoration-none h-100"
+                       href="/web#model=sunnypay.transaction&amp;view_type=list"
+                       role="button">
+                        <div class="card-body text-center py-4">
+                            <i class="fa fa-credit-card fa-2x mb-2 text-primary"/>
+                            <h6>Transactions</h6>
+                            <small class="text-muted">View all payments</small>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <a class="card border-0 shadow-sm text-decoration-none h-100"
+                       href="/web#model=sunnypay.merchant&amp;view_type=list"
+                       role="button">
+                        <div class="card-body text-center py-4">
+                            <i class="fa fa-building fa-2x mb-2 text-warning"/>
+                            <h6>Merchants</h6>
+                            <small class="text-muted">Manage businesses</small>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <a class="card border-0 shadow-sm text-decoration-none h-100"
+                       href="/web#model=sunnypay.invoice&amp;view_type=list"
+                       role="button">
+                        <div class="card-body text-center py-4">
+                            <i class="fa fa-file-text-o fa-2x mb-2 text-success"/>
+                            <h6>Invoices</h6>
+                            <small class="text-muted">Track invoices</small>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <a class="card border-0 shadow-sm text-decoration-none h-100"
+                       href="/web#model=sunnypay.customer&amp;view_type=list"
+                       role="button">
+                        <div class="card-body text-center py-4">
+                            <i class="fa fa-users fa-2x mb-2 text-info"/>
+                            <h6>Customers</h6>
+                            <small class="text-muted">Customer database</small>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Status & Payment Methods -->
+            <div class="row">
+                <div class="col-lg-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0">Transaction Status Breakdown</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="status_breakdown">
+                                <p class="text-muted text-center py-4">
+                                    <i class="fa fa-spinner fa-spin me-1"/>Loading...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-transparent">
+                            <h5 class="mb-0">Payment Methods</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="method_breakdown">
+                                <p class="text-muted text-center py-4">
+                                    <i class="fa fa-spinner fa-spin me-1"/>Loading...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connection Status -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body py-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted small">
+                                    <i class="fa fa-plug me-1"/>API Connection Status
+                                </span>
+                                <span class="badge bg-secondary" id="connection_status">
+                                    Checking...
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

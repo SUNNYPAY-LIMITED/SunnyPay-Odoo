@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- SunnyPay Settings Action -->
+    <record id="action_sunnypay_config_settings" model="ir.actions.act_window">
+        <field name="name">SunnyPay Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'sunnypay_connector'}</field>
+    </record>
+
+    <!-- Settings View -->
+    <record id="view_sunnypay_config_settings" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sunnypay</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="SunnyPay" string="SunnyPay" name="sunnypay_connector">
+                    <block title="API Connection" name="sunnypay_api_connection">
+                        <setting string="SunnyPay API URL" help="The base URL for your SunnyPay API instance">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="sunnypay_api_url" class="col-lg-3 o_light_label"/>
+                                    <field name="sunnypay_api_url" class="col-lg-6"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting string="Environment" help="Select your SunnyPay environment">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="sunnypay_environment" class="col-lg-3 o_light_label"/>
+                                    <field name="sunnypay_environment" class="col-lg-4"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+
+                    <block title="Authentication" name="sunnypay_auth">
+                        <setting string="API Key" help="Your SunnyPay API key">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="sunnypay_api_key" class="col-lg-3 o_light_label"/>
+                                    <field name="sunnypay_api_key" class="col-lg-6" password="True"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting string="API Secret" help="Your SunnyPay API secret">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="sunnypay_api_secret" class="col-lg-3 o_light_label"/>
+                                    <field name="sunnypay_api_secret" class="col-lg-6" password="True"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting string="Webhook Secret" help="Secret for verifying incoming SunnyPay webhooks">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="sunnypay_webhook_secret" class="col-lg-3 o_light_label"/>
+                                    <field name="sunnypay_webhook_secret" class="col-lg-6" password="True"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+
+                    <block title="Synchronization" name="sunnypay_sync">
+                        <setting string="Auto Sync" help="Automatically sync data from SunnyPay">
+                            <field name="sunnypay_auto_sync"/>
+                        </setting>
+                        <setting string="Sync Interval" help="Minutes between automatic syncs">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="sunnypay_sync_interval" class="col-lg-3 o_light_label"/>
+                                    <field name="sunnypay_sync_interval" class="col-lg-2"/>
+                                    <span class="o_light_label"> minutes</span>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+
+                    <block title="Actions" name="sunnypay_actions">
+                        <setting string="Test &amp; Sync">
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <button name="action_test_connection"
+                                            type="object"
+                                            string="Test Connection"
+                                            class="btn-primary me-2"
+                                            icon="fa-plug"/>
+                                    <button name="action_sync_all"
+                                            type="object"
+                                            string="Sync All Data"
+                                            class="btn-secondary"
+                                            icon="fa-refresh"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

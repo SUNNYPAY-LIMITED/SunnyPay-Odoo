@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========== Merchant Tree View ========== -->
+    <record id="view_sunnypay_merchant_tree" model="ir.ui.view">
+        <field name="name">sunnypay.merchant.tree</field>
+        <field name="model">sunnypay.merchant</field>
+        <field name="arch" type="xml">
+            <tree string="Merchants"
+                  decoration-success="verification_status == 'verified'"
+                  decoration-warning="verification_status == 'pending'"
+                  decoration-danger="verification_status in ('rejected', 'suspended')">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="business_type"/>
+                <field name="verification_status"
+                       widget="badge"
+                       decoration-success="verification_status == 'verified'"
+                       decoration-warning="verification_status == 'pending'"
+                       decoration-danger="verification_status in ('rejected', 'suspended')"
+                       decoration-info="verification_status == 'under_review'"/>
+                <field name="api_key_tier"/>
+                <field name="country_id" optional="show"/>
+                <field name="transaction_count"/>
+                <field name="total_volume" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ========== Merchant Form View ========== -->
+    <record id="view_sunnypay_merchant_form" model="ir.ui.view">
+        <field name="name">sunnypay.merchant.form</field>
+        <field name="model">sunnypay.merchant</field>
+        <field name="arch" type="xml">
+            <form string="Merchant">
+                <header>
+                    <button name="action_view_transactions"
+                            type="object"
+                            string="View Transactions"
+                            class="btn-primary"
+                            icon="fa-list"/>
+                    <button name="action_create_partner"
+                            type="object"
+                            string="Create Odoo Contact"
+                            class="btn-secondary"
+                            icon="fa-user-plus"
+                            invisible="partner_id"/>
+                    <field name="verification_status" widget="statusbar"
+                           statusbar_visible="pending,under_review,verified"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_transactions"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-exchange">
+                            <field name="transaction_count" string="Transactions"
+                                   widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Business Information">
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="website" widget="url"/>
+                            <field name="business_type"/>
+                            <field name="industry"/>
+                        </group>
+                        <group string="Registration">
+                            <field name="country_id"/>
+                            <field name="registration_number"/>
+                            <field name="tax_id"/>
+                            <field name="api_key_tier"/>
+                            <field name="sunnypay_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Financial">
+                            <field name="total_volume"/>
+                            <field name="currency_id"/>
+                            <field name="settlement_currency"/>
+                        </group>
+                        <group string="Odoo Integration">
+                            <field name="partner_id"/>
+                            <field name="created_at"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- ========== Merchant Search View ========== -->
+    <record id="view_sunnypay_merchant_search" model="ir.ui.view">
+        <field name="name">sunnypay.merchant.search</field>
+        <field name="model">sunnypay.merchant</field>
+        <field name="arch" type="xml">
+            <search string="Search Merchants">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="sunnypay_id"/>
+                <separator/>
+                <filter string="Verified" name="verified"
+                        domain="[('verification_status', '=', 'verified')]"/>
+                <filter string="Pending" name="pending"
+                        domain="[('verification_status', '=', 'pending')]"/>
+                <filter string="Under Review" name="under_review"
+                        domain="[('verification_status', '=', 'under_review')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Business Type" name="group_type"
+                            context="{'group_by': 'business_type'}"/>
+                    <filter string="Status" name="group_status"
+                            context="{'group_by': 'verification_status'}"/>
+                    <filter string="Country" name="group_country"
+                            context="{'group_by': 'country_id'}"/>
+                    <filter string="API Tier" name="group_tier"
+                            context="{'group_by': 'api_key_tier'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ========== Merchant Action ========== -->
+    <record id="action_sunnypay_merchant_list" model="ir.actions.act_window">
+        <field name="name">Merchants</field>
+        <field name="res_model">sunnypay.merchant</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_sunnypay_merchant_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No merchants yet
+            </p>
+            <p>
+                Sync merchants from SunnyPay via Settings → SunnyPay → Sync All Data.
+            </p>
+        </field>
+    </record>
+</odoo>

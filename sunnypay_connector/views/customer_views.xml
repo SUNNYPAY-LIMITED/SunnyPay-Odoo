@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========== Customer Tree View ========== -->
+    <record id="view_sunnypay_customer_tree" model="ir.ui.view">
+        <field name="name">sunnypay.customer.tree</field>
+        <field name="model">sunnypay.customer</field>
+        <field name="arch" type="xml">
+            <tree string="Customers">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="sunny_tag"/>
+                <field name="account_type"/>
+                <field name="country_id" optional="show"/>
+                <field name="transaction_count"/>
+                <field name="total_spent"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="created_at" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ========== Customer Form View ========== -->
+    <record id="view_sunnypay_customer_form" model="ir.ui.view">
+        <field name="name">sunnypay.customer.form</field>
+        <field name="model">sunnypay.customer</field>
+        <field name="arch" type="xml">
+            <form string="Customer">
+                <header>
+                    <button name="action_view_transactions"
+                            type="object"
+                            string="View Transactions"
+                            class="btn-primary"
+                            icon="fa-list"/>
+                    <button name="action_create_partner"
+                            type="object"
+                            string="Create Odoo Contact"
+                            class="btn-secondary"
+                            icon="fa-user-plus"
+                            invisible="partner_id"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_transactions"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-exchange">
+                            <field name="transaction_count" string="Transactions"
+                                   widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <h3>
+                            <field name="sunny_tag" placeholder="SunnyTag"/>
+                        </h3>
+                    </div>
+                    <group>
+                        <group string="Contact Information">
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="country_id"/>
+                        </group>
+                        <group string="Account Details">
+                            <field name="account_type"/>
+                            <field name="preferred_currency"/>
+                            <field name="timezone"/>
+                            <field name="locale"/>
+                            <field name="sunnypay_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Financial Summary">
+                            <field name="total_spent"/>
+                            <field name="currency_id"/>
+                            <field name="last_transaction_at"/>
+                        </group>
+                        <group string="Odoo Integration">
+                            <field name="partner_id"/>
+                            <field name="created_at"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- ========== Customer Search View ========== -->
+    <record id="view_sunnypay_customer_search" model="ir.ui.view">
+        <field name="name">sunnypay.customer.search</field>
+        <field name="model">sunnypay.customer</field>
+        <field name="arch" type="xml">
+            <search string="Search Customers">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="sunny_tag"/>
+                <field name="phone"/>
+                <separator/>
+                <filter string="Personal" name="personal"
+                        domain="[('account_type', '=', 'personal')]"/>
+                <filter string="Business" name="business"
+                        domain="[('account_type', '=', 'business')]"/>
+                <filter string="Developer" name="developer"
+                        domain="[('account_type', '=', 'developer')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Account Type" name="group_type"
+                            context="{'group_by': 'account_type'}"/>
+                    <filter string="Country" name="group_country"
+                            context="{'group_by': 'country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ========== Customer Action ========== -->
+    <record id="action_sunnypay_customer_list" model="ir.actions.act_window">
+        <field name="name">Customers</field>
+        <field name="res_model">sunnypay.customer</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_sunnypay_customer_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No customers yet
+            </p>
+            <p>
+                Sync customers from SunnyPay via Settings → SunnyPay → Sync All Data.
+            </p>
+        </field>
+    </record>
+</odoo>

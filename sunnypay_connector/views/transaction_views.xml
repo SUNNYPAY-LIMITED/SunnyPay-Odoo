@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========== Transaction Sequence ========== -->
+    <record id="seq_sunnypay_transaction" model="ir.sequence">
+        <field name="name">SunnyPay Transaction</field>
+        <field name="code">sunnypay.transaction</field>
+        <field name="prefix">TXN/%(year)s/</field>
+        <field name="padding">6</field>
+    </record>
+
+    <!-- ========== Transaction Tree View ========== -->
+    <record id="view_sunnypay_transaction_tree" model="ir.ui.view">
+        <field name="name">sunnypay.transaction.tree</field>
+        <field name="model">sunnypay.transaction</field>
+        <field name="arch" type="xml">
+            <tree string="Transactions"
+                  decoration-success="status == 'completed'"
+                  decoration-danger="status == 'failed'"
+                  decoration-warning="status == 'pending'"
+                  decoration-info="status == 'processing'"
+                  decoration-muted="status == 'cancelled'">
+                <field name="name"/>
+                <field name="transaction_date"/>
+                <field name="customer_name"/>
+                <field name="payment_method"/>
+                <field name="amount" sum="Total"/>
+                <field name="fee_amount" sum="Total Fees" optional="hide"/>
+                <field name="net_amount" sum="Net Total" optional="hide"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="status"
+                       widget="badge"
+                       decoration-success="status == 'completed'"
+                       decoration-danger="status == 'failed'"
+                       decoration-warning="status == 'pending'"
+                       decoration-info="status == 'processing'"/>
+                <field name="merchant_id" optional="show"/>
+                <field name="processor" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ========== Transaction Form View ========== -->
+    <record id="view_sunnypay_transaction_form" model="ir.ui.view">
+        <field name="name">sunnypay.transaction.form</field>
+        <field name="model">sunnypay.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Transaction">
+                <header>
+                    <button name="action_refund"
+                            type="object"
+                            string="Refund"
+                            class="btn-primary"
+                            invisible="status != 'completed'"
+                            confirm="Are you sure you want to refund this transaction?"/>
+                    <button name="action_view_in_sunnypay"
+                            type="object"
+                            string="View in SunnyPay"
+                            class="btn-secondary"
+                            icon="fa-external-link"
+                            invisible="not sunnypay_id"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="pending,processing,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Payment Details">
+                            <field name="amount"/>
+                            <field name="currency_id"/>
+                            <field name="fee_amount"/>
+                            <field name="net_amount"/>
+                            <field name="payment_method"/>
+                            <field name="processor"/>
+                        </group>
+                        <group string="Customer">
+                            <field name="customer_name"/>
+                            <field name="customer_email"/>
+                            <field name="customer_phone"/>
+                            <field name="customer_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="References">
+                            <field name="sunnypay_id"/>
+                            <field name="correlation_id"/>
+                            <field name="merchant_id"/>
+                            <field name="invoice_id"/>
+                            <field name="transaction_date"/>
+                        </group>
+                        <group string="Additional Info">
+                            <field name="description"/>
+                            <field name="error_message"
+                                   invisible="status != 'failed'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Raw Data" invisible="not metadata">
+                            <field name="metadata"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- ========== Transaction Search View ========== -->
+    <record id="view_sunnypay_transaction_search" model="ir.ui.view">
+        <field name="name">sunnypay.transaction.search</field>
+        <field name="model">sunnypay.transaction</field>
+        <field name="arch" type="xml">
+            <search string="Search Transactions">
+                <field name="name"/>
+                <field name="sunnypay_id"/>
+                <field name="customer_name"/>
+                <field name="customer_email"/>
+                <field name="merchant_id"/>
+                <separator/>
+                <filter string="Completed" name="completed"
+                        domain="[('status', '=', 'completed')]"/>
+                <filter string="Pending" name="pending"
+                        domain="[('status', '=', 'pending')]"/>
+                <filter string="Failed" name="failed"
+                        domain="[('status', '=', 'failed')]"/>
+                <filter string="Refunded" name="refunded"
+                        domain="[('status', '=', 'refunded')]"/>
+                <separator/>
+                <filter string="M-Pesa" name="mpesa"
+                        domain="[('payment_method', '=', 'mpesa')]"/>
+                <filter string="Card" name="card"
+                        domain="[('payment_method', '=', 'card')]"/>
+                <filter string="Crypto" name="crypto"
+                        domain="[('payment_method', '=', 'crypto')]"/>
+                <filter string="Bank Transfer" name="bank_transfer"
+                        domain="[('payment_method', '=', 'bank_transfer')]"/>
+                <separator/>
+                <filter string="Today" name="today"
+                        domain="[('transaction_date', '&gt;=', (context_today()).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="This Week" name="this_week"
+                        domain="[('transaction_date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="This Month" name="this_month"
+                        domain="[('transaction_date', '&gt;=', (context_today()).strftime('%%Y-%%m-01'))]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_status"
+                            context="{'group_by': 'status'}"/>
+                    <filter string="Payment Method" name="group_method"
+                            context="{'group_by': 'payment_method'}"/>
+                    <filter string="Merchant" name="group_merchant"
+                            context="{'group_by': 'merchant_id'}"/>
+                    <filter string="Date" name="group_date"
+                            context="{'group_by': 'transaction_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ========== Transaction Action ========== -->
+    <record id="action_sunnypay_transaction_list" model="ir.actions.act_window">
+        <field name="name">Transactions</field>
+        <field name="res_model">sunnypay.transaction</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="search_view_id" ref="view_sunnypay_transaction_search"/>
+        <field name="context">{'search_default_completed': 0}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No transactions yet
+            </p>
+            <p>
+                Go to Settings → SunnyPay to configure your API connection and sync transactions.
+            </p>
+        </field>
+    </record>
+</odoo>

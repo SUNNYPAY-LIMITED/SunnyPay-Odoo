@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sunnypay_transaction_user,sunnypay.transaction.user,model_sunnypay_transaction,base.group_user,1,1,1,0
+access_sunnypay_transaction_manager,sunnypay.transaction.manager,model_sunnypay_transaction,account.group_account_manager,1,1,1,1
+access_sunnypay_merchant_user,sunnypay.merchant.user,model_sunnypay_merchant,base.group_user,1,1,1,0
+access_sunnypay_merchant_manager,sunnypay.merchant.manager,model_sunnypay_merchant,account.group_account_manager,1,1,1,1
+access_sunnypay_invoice_user,sunnypay.invoice.user,model_sunnypay_invoice,base.group_user,1,1,1,0
+access_sunnypay_invoice_manager,sunnypay.invoice.manager,model_sunnypay_invoice,account.group_account_manager,1,1,1,1
+access_sunnypay_customer_user,sunnypay.customer.user,model_sunnypay_customer,base.group_user,1,1,1,0
+access_sunnypay_customer_manager,sunnypay.customer.manager,model_sunnypay_customer,account.group_account_manager,1,1,1,1
